@@ -10,7 +10,7 @@ mycli的详细使用方法可以查看官网说明 <https://www.mycli.net/>
 
 ![mycli-helper-network](mycli-helper.png)
 
-通常我们无法连接线上数据库，需要一台服务器作为中转，我们可以登录这台中转服务器，通过中转服务器访问MySQL
+通常我们无法连接线上生产环境数据库，需要一台服务器作为中转，我们可以登录这台中转服务器，通过中转服务器访问MySQL
 
 ### 环境依赖
 
@@ -57,7 +57,7 @@ mysql 是远程MySQL登录配置
 
 ### 使用方法
 
-只有一个可选参数，`-c` 指定配置文件路径
+只有一个可选参数，`-c` 指定配置文件路径，如果没有指定则会使用当前目录下的mycli.ini配置文件。
 ```bash
 python mycli-helper.py -h
 usage: mycli helper [-h] [-c CONFIG]
