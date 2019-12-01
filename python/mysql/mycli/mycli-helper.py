@@ -63,11 +63,12 @@ if __name__ == "__main__":
     server = None
     if cfg.has_option(section, "remote_password"):
         server = SSHTunnelForwarder(
-            ssh_address_or_host=server_cfg["remote_host"],
-            ssh_username=server_cfg["remote_username"],
-            ssh_password=server_cfg["remote_password"],
+            ssh_address_or_host=(
+                server_cfg.get("remote_host"), server_cfg.getint("remote_port")),
+            ssh_username=server_cfg.get("remote_username"),
+            ssh_password=server_cfg.get("remote_password"),
             remote_bind_address=(
-                server_cfg["mysql_host"], server_cfg["mysql_port"]),
+                server_cfg.get("mysql_host"), server_cfg.getint("mysql_port")),
             local_bind_address=('127.0.0.1', local_port)
         )
     else:
@@ -80,12 +81,11 @@ if __name__ == "__main__":
                 "remote_pkey_password", ""),
             remote_bind_address=(
                 server_cfg.get("mysql_host"), server_cfg.getint("mysql_port")),
-            local_bind_address=('localhost', local_port)
+            local_bind_address=('127.0.0.1', local_port)
         )
     server.start()
 
-    # mycli mysql://$myuser:$mypwd@localhost:$port
-    cmd = ["mycli", "mysql://%s:%s@localhost:%d" % (server_cfg.get("mysql_user"), server_cfg.get("mysql_password"), local_port)]
+    cmd = ["mycli", "mysql://%s:%s@127.0.0.1:%d" % (server_cfg.get("mysql_user"), server_cfg.get("mysql_password"), local_port)]
     print(" ".join(cmd))
     os.system(" ".join(cmd))
 
