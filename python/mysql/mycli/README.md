@@ -1,8 +1,10 @@
 # mycli辅助工具
 
+github: <https://github.com/fengjx/tools/tree/master/python/mysql/mycli>
+
 ### 用途
 
-更方便的通过ssh tunnel远程服务器端口转发来使用MySQL命令行客户端mycli连接远程MySQL。
+更方便得通过ssh tunnel远程服务器端口转发来使用MySQL命令行客户端mycli连接远程MySQL。
 
 mycli的详细使用方法可以查看官网说明 <https://www.mycli.net/>
 
@@ -37,6 +39,7 @@ ps: 推荐你使用[pyenv](https://github.com/pyenv/pyenv)或者其他python依�
 
 ```ini mycli.ini
 [user-mysql]
+cli_type=mysql
 desc=用户数据库
 remote_host=192.168.1.106
 remote_port=22
@@ -50,6 +53,8 @@ mysql_port=3306
 mysql_user=root
 mysql_password=1234
 ```
+
+cli_type: 只能是mycli或者mysql，不配置默认是mycli
 
 remote 是ssh登录代理端口转发的服务器配置，remote_password和remote_pkey、remote_pkey_password两个可以按实际情况选择使用密码登录还是秘钥登录。
 

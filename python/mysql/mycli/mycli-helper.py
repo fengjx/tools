@@ -5,7 +5,7 @@ import argparse
 import random
 import socket
 import os
-import time
+import sys
 from sshtunnel import SSHTunnelForwarder
 from configparser import ConfigParser
 
@@ -23,6 +23,7 @@ def get_available_port():
     finally:
         sock.close()
 
+
 def input_num(len):
     try:
         num = int(input())
@@ -30,12 +31,13 @@ def input_num(len):
             print("没有找到配置项，请重新输入配置编号")
             return input_num(len)
         elif num < 0:
-            print("没有找到配置项，请重新输入配置编号") 
+            print("没有找到配置项，请重新输入配置编号")
             return input_num(len)
-        return num    
+        return num
     except:
         print("请输入正确的编号")
         return input_num(len)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("mycli helper")
@@ -58,7 +60,6 @@ if __name__ == "__main__":
     section = sections[num]
     server_cfg = cfg[section]
     local_port = get_available_port()
-    print("connect to %s, bind local port %d" % (section, local_port))
 
     server = None
     if cfg.has_option(section, "remote_password"):
@@ -83,10 +84,18 @@ if __name__ == "__main__":
                 server_cfg.get("mysql_host"), server_cfg.getint("mysql_port")),
             local_bind_address=('127.0.0.1', local_port)
         )
-    server.start()
+    cli_type = server_cfg.get("cli_type", "mycli")
+    if cli_type == "mycli":
+        cmd = ["mycli", "mysql://%s:%s@127.0.0.1:%d" %
+               (server_cfg.get("mysql_user"), server_cfg.get("mysql_password"), local_port)]
+    elif cli_type == "mysql":
+        cmd = ["mysql", "-h127.0.0.1", "-P%d" % local_port, "-u%s" %
+               server_cfg.get("mysql_user"), "-p'%s'" % server_cfg.get("mysql_password")]
+    else:
+        raise SystemExit("不支持的 cli_type: %s" % cli_type)
 
-    cmd = ["mycli", "mysql://%s:%s@127.0.0.1:%d" % (server_cfg.get("mysql_user"), server_cfg.get("mysql_password"), local_port)]
+    server.start()
+    print("connect to %s, bind local port %d" % (section, local_port))
     print(" ".join(cmd))
     os.system(" ".join(cmd))
-
     server.stop()
