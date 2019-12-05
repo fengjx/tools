@@ -86,11 +86,11 @@ if __name__ == "__main__":
         )
     cli_type = server_cfg.get("cli_type", "mycli")
     if cli_type == "mycli":
-        cmd = ["mycli", "mysql://%s:%s@127.0.0.1:%d" %
-               (server_cfg.get("mysql_user"), server_cfg.get("mysql_password"), local_port)]
+        cmd = ["mycli", "-h 127.0.0.1", "-P %d" % local_port, "-u %s" %
+               server_cfg.get("mysql_user"), "-p '%s'" % server_cfg.get("mysql_password")]
     elif cli_type == "mysql":
-        cmd = ["mysql", "-h127.0.0.1", "-P%d" % local_port, "-u%s" %
-               server_cfg.get("mysql_user"), "-p'%s'" % server_cfg.get("mysql_password")]
+        cmd = ["mysql", "-h 127.0.0.1", "-P %d" % local_port, "-u %s" %
+               server_cfg.get("mysql_user"), "-p '%s'" % server_cfg.get("mysql_password")]
     else:
         raise SystemExit("不支持的 cli_type: %s" % cli_type)
 
