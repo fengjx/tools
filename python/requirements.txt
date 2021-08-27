@@ -1,3 +1,4 @@
 mycli==1.20.1
 sshtunnel==0.1.5
+redis=3.5.3
 
